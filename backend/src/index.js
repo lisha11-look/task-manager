@@ -11,9 +11,15 @@ const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
-// Middleware
-app.use(cors());
+// Allow ALL origins (temporary fix for development)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -23,17 +29,12 @@ app.use('/api/tasks', taskRoutes);
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Task Manager API is running 🚀',
-    status: 'success',
-    endpoints: {
-      register: 'POST /api/auth/register',
-      login: 'POST /api/auth/login',
-      tasks: 'GET/POST /api/tasks (requires token)'
-    }
+    status: 'success'
   });
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📝 Test API at http://localhost:${PORT}/`);
+  console.log(`✅ CORS enabled for all origins`);
 });
