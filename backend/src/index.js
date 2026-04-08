@@ -7,16 +7,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Test route
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Task Manager API is running 🚀',
     status: 'success',
-    timestamp: new Date().toISOString()
+    endpoints: {
+      register: 'POST /api/auth/register',
+      login: 'POST /api/auth/login',
+      tasks: 'GET/POST /api/tasks (requires token)'
+    }
   });
 });
 
